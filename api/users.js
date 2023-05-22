@@ -8,10 +8,10 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 require("dotenv").config();
 
-const token = jwt.sign({ id: 1, username: "albert" }, process.env.JWT_SECRET);
-token;
-const recoveredData = jwt.verify(token, process.env.JWT_SECRET);
-recoveredData;
+// const token = jwt.sign({ id: 1, username: "albert" }, process.env.JWT_SECRET);
+// token;
+// const recoveredData = jwt.verify(token, process.env.JWT_SECRET);
+// recoveredData;
 
 usersRouter.use((req, res, next) => {
   console.log("A request is being made to /users");
@@ -39,7 +39,10 @@ usersRouter.post("/login", async (req, res, next) => {
 
   try {
     const user = await getUserByUsername(username);
-
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET
+    );
     if (user && user.password == password) {
       // create token & return to user
       res.send({ message: "you're logged in!", token: token });

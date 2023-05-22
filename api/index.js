@@ -1,11 +1,11 @@
 const express = require("express");
 const apiRouter = express.Router();
-
+const path = require("path");
 require("dotenv").config();
 //console.log(process.env.JWT_SECRET);
-
+apiRouter.use(express.static(path.join(__dirname, "./client", "dist")));
 const jwt = require("jsonwebtoken");
-const { getUserById } = require("../db");
+const { getUserById, updatePost, getPostById } = require("../db");
 const { JWT_SECRET } = process.env;
 
 apiRouter.use((req, res, next) => {
@@ -43,6 +43,14 @@ apiRouter.use(async (req, res, next) => {
       message: `Authorization token must start with ${prefix}`,
     });
   }
+});
+
+apiRouter.get("/background/:color", (req, res, next) => {
+  res.send(`
+    <body style="background: ${req.params.color};">
+      <h1>Hello World</h1>
+    </body>
+  `);
 });
 
 const usersRouter = require("./users");

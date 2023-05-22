@@ -18,6 +18,7 @@ module.exports = {
   createPostTag,
   addTagsToPost,
   getUserByUsername,
+  getPostById,
 };
 
 async function createUser({ username, password, name, location }) {
