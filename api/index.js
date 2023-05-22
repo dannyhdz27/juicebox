@@ -2,11 +2,19 @@ const express = require("express");
 const apiRouter = express.Router();
 
 require("dotenv").config();
-// console.log(process.env.JWT_SECRET);
+//console.log(process.env.JWT_SECRET);
 
 const jwt = require("jsonwebtoken");
 const { getUserById } = require("../db");
 const { JWT_SECRET } = process.env;
+
+apiRouter.use((req, res, next) => {
+  if (req.user) {
+    console.log("User is set:", req.user);
+  }
+
+  next();
+});
 
 // set `req.user` if possible
 apiRouter.use(async (req, res, next) => {
@@ -38,12 +46,13 @@ apiRouter.use(async (req, res, next) => {
 });
 
 const usersRouter = require("./users");
-const usersRouter2 = require("./posts");
-const usersRouter3 = require("./tags");
+const postsRouter = require("./posts");
+const tagsRouter = require("./tags");
 apiRouter.use("/users", usersRouter);
-apiRouter.use("/posts", usersRouter2);
-apiRouter.use("/tags", usersRouter3);
+apiRouter.use("/posts", postsRouter);
+apiRouter.use("/tags", tagsRouter);
 
+//error handler
 apiRouter.use((error, req, res, next) => {
   res.send({
     name: error.name,
